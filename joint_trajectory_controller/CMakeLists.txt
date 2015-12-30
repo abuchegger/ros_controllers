@@ -61,7 +61,6 @@ else()
       realtime_tools
       control_msgs
       trajectory_msgs
-      rostest
       controller_manager
       xacro
   )
@@ -79,7 +78,6 @@ else()
     realtime_tools
     control_msgs
     trajectory_msgs
-    rostest
     controller_manager
     xacro
     INCLUDE_DIRS include
@@ -103,6 +101,8 @@ else()
   target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
 
   if(CATKIN_ENABLE_TESTING)
+    find_package(rostest) 
+
     catkin_add_gtest(quintic_spline_segment_test test/quintic_spline_segment_test.cpp)
     target_link_libraries(quintic_spline_segment_test ${catkin_LIBRARIES})
 
@@ -127,6 +127,7 @@ else()
     target_link_libraries(rrbot ${catkin_LIBRARIES})
 
     add_dependencies(tests rrbot)
+    add_dependencies(tests ${PROJECT_NAME})
 
     add_rostest_gtest(joint_trajectory_controller_test
                       test/joint_trajectory_controller.test
@@ -137,6 +138,9 @@ else()
   # Install
   install(DIRECTORY include/${PROJECT_NAME}/
     DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
+
+  install(DIRECTORY include/trajectory_interface/
+    DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}/trajectory_interface/)
 
   install(TARGETS ${PROJECT_NAME}
     ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
